@@ -85,14 +85,18 @@ all_plats = pg.sprite.Group()
 # instantiate the player class
 player = Player()
 plat = Platform(WIDTH/2, HEIGHT/3, 100, 35)
-plat1 = Platform(75, 300, 100, 35)
+plat1 = Platform(0, 400, 400, 10)
 
 # add player to all sprites group
 all_sprites.add(player)
 all_sprites.add(plat)
 all_sprites.add(plat1)
 
+all_sprites.add(player)
+all_plats.add(plat, plat1)
 
+all_sprites.add(plat)
+all_sprites.add(plat1)
 class Enemy(Sprite):
     def __init__(self,name,shield,destruction):
         self.name=name
@@ -110,11 +114,17 @@ class Enemy(Sprite):
 
 # Game loop
 # keeps game runnint until QUIT
+# says that at all times, while the game is running, run the if statment to check if player is interacting with 
+# platform and if so to print something and to freeze the y coordinates of the player
 running = True
 while running:
     # keep the loop running using clock
     clock.tick(FPS)
-
+    hits = pg.sprite.spritecollide(player, all_plats, False)
+    if hits:
+        print("ive struck a plat")
+        player.pos.y = hits[0].rect.top
+        player.vel.y = 0
     for event in pg.event.get():
         # check for closed window
         if event.type == pg.QUIT:
